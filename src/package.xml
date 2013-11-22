@@ -16,5 +16,10 @@
 		<members>*</members>
 		<name>StaticResource</name>
 	</types>
+    <types>
+        <members>*</members>
+        <name>CustomSite</name>
+    </types>    
+
 	<version>28.0</version>
 </Package>
