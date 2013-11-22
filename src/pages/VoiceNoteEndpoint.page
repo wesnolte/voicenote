@@ -1,0 +1,7 @@
+<apex:page controller="VoiceNoteEndpointController"
+  showheader="false"
+  contentType="text/xml"
+  cache="false"
+  >{! '<?xml version=\"1.0\" encoding=\"UTF-8\"?>' }
+{!twiml}
+</apex:page>
