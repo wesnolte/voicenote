@@ -2,6 +2,7 @@
   showheader="false"
   contentType="text/xml"
   cache="false"
+  action="{!initTwiml}"
   >{! '<?xml version=\"1.0\" encoding=\"UTF-8\"?>' }
 {!twiml}
 

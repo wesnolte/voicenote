@@ -10,12 +10,13 @@ public class TwilioResponseBuilder {
 	public static string CONFIRM_IDENTITY_OPTION_CHOOSER = 'confirm_identity_option_chooser';
 
 
-	public static String initKnownCaller(TwilioTwiML.Response r, User caller) {
-		r.append(new TwilioTwiML.Say('Hello ' + caller.Name));
+	public static String initKnownCaller(TwilioTwiML.Response r, Twilio_call__c twiCall) {
+		r.append(new TwilioTwiML.Say('Hello ' + twiCall.Name));
 		TwilioTwiML.Redirect redirect = new TwilioTwiML.Redirect(TwilioLandingController.BASE_URL+STATUS+INIT_KNOWN_CALLER);
 		r.append(redirect);
 		return r.toXML();
 	}
+
 
 	public static String initUnknownCaller(TwilioTwiML.Response r) {
 		TwilioTwiML.Gather g = new TwilioTwiML.Gather();
@@ -23,7 +24,6 @@ public class TwilioResponseBuilder {
 		g.setAction(TwilioLandingController.BASE_URL+STATUS+UNKNOWN_CALLER_OPTION_CHOOSER);
 		g.append(new TwilioTwiML.Say('I do not recognise the number you are calling from. Press 1 to try and identify yourself, otherwise please hang up.'));
 		r.append(g);
-
 		return r.toXML();	
 	}
 
@@ -48,19 +48,20 @@ public class TwilioResponseBuilder {
 
 	}
 
-	public static String confirmIdentity(TwilioTwiML.Response r, User caller) {
+	public static String confirmIdentity(TwilioTwiML.Response r, Twilio_Call__c twiCall) {
 
 		TwilioTwiML.Gather g = new TwilioTwiML.Gather();
 		g.setNumDigits(1);
 		g.setAction(TwilioLandingController.BASE_URL+STATUS+CONFIRM_IDENTITY_OPTION_CHOOSER);//+USERID+caller.Id);
-		g.append(new TwilioTwiML.Say('I have identified you as ' + caller.Name +'. If this is correct, press 1, otherwise, please press 2'));
+		g.append(new TwilioTwiML.Say('I have identified you as ' + twiCall.User_Name__c +'. If this is correct, press 1, otherwise, please press 2'));
 		r.append(g);
 
 		return r.toXML();
 
 	}
 
-	public static String taskVoiceNote(TwilioTwiML.Response r, User caller) {
+
+	public static String taskVoiceNote(TwilioTwiML.Response r) {
 
 		TwilioTwiML.Record rec = new TwilioTwiML.Record();
 		rec.setMaxLength(120); // sets to 120 seconds - the maximum length for transcription
@@ -74,18 +75,21 @@ public class TwilioResponseBuilder {
 
 	}
 
-	public static String storyTime(TwilioTwiML.Response r, User caller) {
-		r.append(new TwilioTwiML.Say(caller.FirstName + ', I don\'t have time to tell a story right now. Don\'t you have better things to be doing? Goodbye'));
+
+	public static String storyTime(TwilioTwiML.Response r, Twilio_Call__c twiCall) {
+		r.append(new TwilioTwiML.Say(twiCall.User_First_Name__c + ', I don\'t have time to tell a story right now. Don\'t you have better things to be doing? Goodbye'));
 		return r.toXML();
 	}
 
-	public static String optionError(TwilioTwiML.Response r, User caller, String invalidChoice, String currentStatus) {
 
-		r.append(new TwilioTwiML.Say(caller.FirstName + ', ' + invalidChoice + ' was not an option. Returning you to the previous menu.'));
+	public static String optionError(TwilioTwiML.Response r, Twilio_Call__c twiCall){
 
-		if(currentStatus == KNOWN_CALLER_OPTION_CHOOSER) {
+		r.append(new TwilioTwiML.Say(twiCall.User_First_Name__c + ', ' + twiCall.Input__c + ' was not an option. Returning you to the previous menu.'));
+
+		if(twiCall.Status__c == KNOWN_CALLER_OPTION_CHOOSER) {
 			return optionKnownCaller(r);
-		} else if (currentStatus == UNKNOWN_CALLER_OPTION_CHOOSER) {
+		} else if (twiCall.Status__c == UNKNOWN_CALLER_OPTION_CHOOSER) {
+			//tbd
 			return null;
 		} else {
 			return null;
@@ -93,8 +97,9 @@ public class TwilioResponseBuilder {
 	}
 
 
-	public static String unableToIdentifyError(TwilioTwiML.Response r) {
 
+	public static String unableToIdentifyError(TwilioTwiML.Response r) {
+		
 		r.append(new TwilioTwiML.Say('Sorry, I am unable to identify you. Please hang up'));
 		return r.toXML();
 	}
