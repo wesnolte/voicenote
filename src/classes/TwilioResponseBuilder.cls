@@ -11,6 +11,7 @@ public class TwilioResponseBuilder {
 
 
 	public static String initKnownCaller(TwilioTwiML.Response r, Twilio_call__c twiCall) {
+		
 		r.append(new TwilioTwiML.Say('Hello ' + twiCall.Name));
 		TwilioTwiML.Redirect redirect = new TwilioTwiML.Redirect(TwilioLandingController.BASE_URL+STATUS+INIT_KNOWN_CALLER);
 		r.append(redirect);
@@ -19,6 +20,7 @@ public class TwilioResponseBuilder {
 
 
 	public static String initUnknownCaller(TwilioTwiML.Response r) {
+		
 		TwilioTwiML.Gather g = new TwilioTwiML.Gather();
 		g.setNumDigits(1);
 		g.setAction(TwilioLandingController.BASE_URL+STATUS+UNKNOWN_CALLER_OPTION_CHOOSER);
@@ -27,7 +29,9 @@ public class TwilioResponseBuilder {
 		return r.toXML();	
 	}
 
+
 	public static String optionKnownCaller(TwilioTwiML.Response r) {
+		
 		TwilioTwiML.Gather g = new TwilioTwiML.Gather();
 		g.setNumDigits(1);
 		g.setAction(TwilioLandingController.BASE_URL+STATUS+KNOWN_CALLER_OPTION_CHOOSER);
@@ -38,7 +42,7 @@ public class TwilioResponseBuilder {
 
 
 	public static String manualUserIdentify(TwilioTwiML.Response r) {
-
+		
 		TwilioTwiML.Gather g = new TwilioTwiML.Gather();
 		g.setFinishOnKey('#');
 		g.setAction(TwilioLandingController.BASE_URL+STATUS+MANUAL_IDENTIFY_USER);
@@ -47,6 +51,7 @@ public class TwilioResponseBuilder {
 		return r.toXML();
 
 	}
+
 
 	public static String confirmIdentity(TwilioTwiML.Response r, Twilio_Call__c twiCall) {
 
@@ -77,8 +82,10 @@ public class TwilioResponseBuilder {
 
 
 	public static String storyTime(TwilioTwiML.Response r, Twilio_Call__c twiCall) {
+		
 		r.append(new TwilioTwiML.Say(twiCall.User_First_Name__c + ', I don\'t have time to tell a story right now. Don\'t you have better things to be doing? Goodbye'));
 		return r.toXML();
+		
 	}
 
 
@@ -97,9 +104,7 @@ public class TwilioResponseBuilder {
 	}
 
 
-
 	public static String unableToIdentifyError(TwilioTwiML.Response r) {
-		
 		r.append(new TwilioTwiML.Say('Sorry, I am unable to identify you. Please hang up'));
 		return r.toXML();
 	}
